@@ -5,9 +5,9 @@
 RH_ASK driver;
 
 //variables for pins
-int ver = 0;
-int hor = 1;
-int sw = 2;
+int ver = A0;
+int hor = A1;
+int sw = A2;
 uint16_t vertical = 0;
 uint16_t horizontal = 0;
 uint16_t Switch = 0;
@@ -18,9 +18,9 @@ void sendMessage(uint16_t msg){
     uint8_t partB = static_cast<uint8_t>(msg & 0x00FF);
 
     //send in bytes
-    driver.send(*partA);
+    driver.send(&partA, sizeof(partA));
     driver.waitPacketSent();
-    driver.send(*partB);
+    driver.send(&partB, sizeof(partA));
     driver.waitPacketSent();
 }
 
@@ -40,15 +40,15 @@ void loop()
     //read anolog pins for vertical, horizontal and switch
     vertical = analogRead(ver);
     horizontal = analogRead(hor);
-    Switch - analogRead(sw);
+    Switch = analogRead(sw);
     
     //print values for debug
-    Serial.println("Vertical = ");
-    Serial.print(vertical);
-    Serial.println("Horizontal = ");
-    Serial.print(horizontal);
-    Serial.println("Switch = ");
-    Serial.print(Switch);
+    Serial.print("Vertical = ");
+    Serial.println(vertical);
+    Serial.print("Horizontal = ");
+    Serial.println(horizontal);
+    Serial.print("Switch = ");
+    Serial.println(Switch);
     
     //send each value
     sendMessage(vertical);
