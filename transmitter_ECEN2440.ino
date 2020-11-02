@@ -1,59 +1,112 @@
-#include <RH_ASK.h>
-#include <SPI.h> // Not actually used but needed to compile
+/*
+ * --------------------Constants----------------------
+ */
 
-//create instance of ASK driver
-RH_ASK driver;
+// baud rate
+const long baud = 50;
 
-//variables for pins
-int ver = A0;
-int hor = A1;
-int sw = A2;
-uint16_t vertical = 0;
-uint16_t horizontal = 0;
-uint16_t Switch = 0;
+// message length
+const uint8_t msgLength = 3;
 
-void sendMessage(uint16_t msg){
-    //parse to byte size
-    uint8_t partA = static_cast<uint8_t>((msg & 0xFF00) >> 8);
-    uint8_t partB = static_cast<uint8_t>(msg & 0x00FF);
+// start/ stop characters 
+const uint16_t Start = 0xF000; //1111_0000_0000_0000
+const uint16_t Stop = 0xFF00;  //1111_1111_0000_0000
 
-    //send in bytes
-    driver.send(&partA, sizeof(partA));
-    driver.waitPacketSent();
-    driver.send(&partB, sizeof(partA));
-    driver.waitPacketSent();
+// post message delay
+const long postDelay = 1000;
+
+// analog pins for reading joystick voltage
+const int ver = A0;
+const int hor = A1;
+const int sw = A2;
+
+/*
+ * -------------------Structures--------------------
+ */
+
+//struct to hold data
+struct data{
+  uint16_t ver;
+  uint16_t hor;
+  uint16_t sw;
+};
+
+/*
+ * -------------------Functions--------------------
+ */
+
+//takes in a data struct and fills the struct from the analog sources
+//returns nothing
+void readPins(data * D){
+  D->ver = analogRead(ver);
+  D->hor = analogRead(hor);
+  D->sw = analogRead(sw);
 }
 
-void setup()
-{
-    Serial.begin(9600);    // Debugging only
-
-    //initialize ASK driver
-    if (!driver.init())
-         Serial.println("init failed");    
+//takes in a two byte variable
+//returns void, updates array LSByte first
+void parseData(uint16_t twoBytes, uint8_t * arr){
+  //parse the 16 bit value into two 8 bit values LSB first
+  arr[1] = static_cast<uint8_t>((twoBytes & 0xFF00) >> 8);
+  arr[0] = static_cast<uint8_t>(twoBytes & 0x00FF);
 }
 
+/*
+ * Least Significant Byte first, Least Significant Bit first
+ * start   len msg1    msg2    msg3    stop
+ * 00__0F__30__LS__MS__LS__MS__LS__MS__00__FF
+ */
+void sendData(data * D){
+  //two byte arrays to send
+  uint8_t st[2] = {0,0};
+  uint8_t sp[2] = {0,0};
+  uint8_t ver[2] = {0,0};
+  uint8_t hor[2] = {0,0};
+  uint8_t sw[2] = {0,0};
 
+  //two byte ints parsed into bytes and placed in two byte arrays
+  parseData(Start, st);
+  parseData(Stop, sp);
+  parseData(D->ver, ver);
+  parseData(D->hor, hor);
+  parseData(D->sw, sw);
+  
+  //send the start 
+  Serial.write(st, sizeof(st));
+  
+  //send the length of the message
+  Serial.write(msgLength);
+  
+  //send the message
+  Serial.write(ver, sizeof(ver));
+  Serial.write(hor, sizeof(hor));
+  Serial.write(sw, sizeof(sw));
 
-void loop()
-{
-    //read anolog pins for vertical, horizontal and switch
-    vertical = analogRead(ver);
-    horizontal = analogRead(hor);
-    Switch = analogRead(sw);
-    
-    //print values for debug
-    Serial.print("Vertical = ");
-    Serial.println(vertical);
-    Serial.print("Horizontal = ");
-    Serial.println(horizontal);
-    Serial.print("Switch = ");
-    Serial.println(Switch);
-    
-    //send each value
-    sendMessage(vertical);
-    sendMessage(horizontal);
-    sendMessage(Switch);
-    
-    delay(1000);
+  //send the stop
+  Serial.write(sp, sizeof(sp));
+  
+  delay(postDelay);
+}
+/*
+ *--------------------Setup-------------------------
+ */
+void setup() {
+  // open serial port for transmit, uses baud rate from above
+  // 8 bit word length, no parity, one stop bit
+  Serial.begin(baud, SERIAL_8N1);
+}
+
+/*
+ *-------------------- Main-------------------------
+ */
+
+void loop() {
+  // instantiate data struct
+  data D = {0,0,0};
+  
+  //read analog pins
+  readPins(&D);
+  
+  //send the data
+  sendData(&D);
 }
