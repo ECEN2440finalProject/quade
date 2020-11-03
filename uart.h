@@ -23,6 +23,7 @@ void start_uart(void);
 #define WRITE       false
 
 #define BAUD_RATE 1500
+#define UART_P EUSCI_A2
 
 // structs
 typedef struct {
