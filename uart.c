@@ -2,15 +2,16 @@
  * uart.c
  *
  *  Created on: Oct 26, 2020
- *    Modified: Nov 2, 2020
+ *    Modified: Nov 4, 2020
  *      Author: terry
  */
 
 #include "uart.h"
+#include "RFlink.h"
 
 //private variables
 static UART_PAYLOAD_TypeDef uart_payload_struct;
-
+static RX_UART_TypeDef rx_uart_struct;
 //------------------------------------------------------------------------
 // private functions
 //------------------------------------------------------------------------
@@ -57,6 +58,8 @@ void EUSCIA0_IRQHandler(void) {
         // store RXBUF bits, will empty buffer
         uint8_t rx = UART_P->RXBUF & EUSCI_A_RXBUF_RXBUF_MASK;
         *uart_payload_struct.data = rx;
+
+        rx_state(rx, &rx_uart_struct);
 
         UART_P->IFG &= ~EUSCI_A_IFG_RXIFG; // clear flag
 
