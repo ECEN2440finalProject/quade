@@ -30,7 +30,20 @@ typedef struct {
 
 } RX_UART_TypeDef;
 
+typedef struct {
+    uint8_t         read;   // current read position
+    uint8_t         write;  // current write position
+    uint8_t         size;   // size of buffer
+    RX_UART_TypeDef *data;  // array of structs for data from receiver
+} RX_UART_BUF_TypeDef;
+
 void config_rx_gpio();
+uint8_t rx_buf_len(RX_UART_BUF_TypeDef *rx_buf);
+
+// Both of the following functions return 0 if successful, 1 if erroneous
+uint8_t rx_buf_write(RX_UART_BUF_TypeDef *rx_buf, RX_UART_TypeDef data);
+uint8_t rx_buf_read(RX_UART_BUF_TypeDef *rx_buf, RX_UART_TypeDef *data);
+
 void rx_state(uint8_t rx_data, RX_UART_TypeDef * rx_uart);
 
 #endif /* RFLINK_H_ */

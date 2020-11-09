@@ -104,10 +104,22 @@
 #include "stIMU.h"
 #include "stdio.h"
 
+#include "uart.h"
+#include "RFlink.h"
+
 
 
 volatile int state = 0;
+/*
+ * States:
+ * 0 - Quade neutral (don't write data to servos)
+ * 1 - Read data from Rx UART buffer, make calculations
+ * 2 - Write data to servos
+ */
 
+static RX_UART_BUF_TypeDef rx_uart_buf;
+static UART_PAYLOAD_TypeDef uart_payload_struct;
+static RX_UART_TypeDef rx_uart_struct;
 
 void main(void)
  {
@@ -120,6 +132,11 @@ void main(void)
     P1->IES |= BIT1;
     P1->IFG = 0;
     P1->IE  |= BIT1;
+
+    // Configure data for Rx buffer
+    rx_uart_buf.size = 8;
+    rx_uart_buf.read = 0;
+    rx_uart_buf.write = 0;
 
     //enable interrupts
     NVIC_EnableIRQ(PORT1_IRQn);
@@ -168,8 +185,8 @@ void main(void)
         //printf("\n");
     }
 
-    //Standing Position
-    while(state == 1){
+    //Standing Position -- any state except 0
+    while(state){
         /*servo_write(URL,90-45); //Because the Orientations are opposite of the other servos,
         servo_write(LRL,90-45); //the direction the servo must move to stand up is also opposote
         servo_write(URA,90+45);
@@ -178,11 +195,36 @@ void main(void)
         servo_write(LLL,90+45);
         servo_write(ULA,90-45); //See Above Comment
         servo_write(LLA,90-45);*/
-
     }
 
 }
 
+// putting this here for ease of struct/buffer handling
+void EUSCIA0_IRQHandler(void) {
+    // check each flag, then perform necessary function
+    if (UART_P->IFG & EUSCI_A_IFG_RXIFG) {
+
+        UART_P->CTLW0 |= EUSCI_A_CTLW0_TXBRK;
+
+        // store RXBUF bits, will empty buffer
+        uint8_t rx = UART_P->RXBUF & EUSCI_A_RXBUF_RXBUF_MASK;
+        *uart_payload_struct.data = rx;
+
+        if (rx_uart_struct.i == rx_uart_struct.length) {
+            rx_buf_write(&rx_uart_buf, rx_uart_struct);
+            rx_uart_struct.i = 0; // reset iteration variable
+        }
+
+        rx_state(rx, &rx_uart_struct);
+
+        UART_P->IFG &= ~EUSCI_A_IFG_RXIFG; // clear flag
+
+    } else if (!(UART_P->RXBUF) && !(UART_P->IFG & EUSCI_A_IFG_RXIFG)) {
+        // if RXBUF is empty and RX interrupt flag is cleared, start transmission of
+        // next word
+        UART_P->CTLW0 &= ~EUSCI_A_CTLW0_TXBRK;
+    }
+}
 
 /* Port1 ISR */
 void PORT1_IRQHandler(void){

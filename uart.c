@@ -9,9 +9,6 @@
 #include "uart.h"
 #include "RFlink.h"
 
-//private variables
-static UART_PAYLOAD_TypeDef uart_payload_struct;
-static RX_UART_TypeDef rx_uart_struct;
 //------------------------------------------------------------------------
 // private functions
 //------------------------------------------------------------------------
@@ -47,27 +44,6 @@ void config_uart_interrupt(void) {
     UART_P->IE |= EUSCI_A_IE_RXIE;
 
     NVIC_EnableIRQ(EUSCIA2_IRQn);       // enable interrupts in NVIC
-}
-
-void EUSCIA0_IRQHandler(void) {
-    // check each flag, then perform necessary function
-    if (UART_P->IFG & EUSCI_A_IFG_RXIFG) {
-
-        UART_P->CTLW0 |= EUSCI_A_CTLW0_TXBRK;
-
-        // store RXBUF bits, will empty buffer
-        uint8_t rx = UART_P->RXBUF & EUSCI_A_RXBUF_RXBUF_MASK;
-        *uart_payload_struct.data = rx;
-
-        rx_state(rx, &rx_uart_struct);
-
-        UART_P->IFG &= ~EUSCI_A_IFG_RXIFG; // clear flag
-
-    } else if (!(UART_P->RXBUF) && !(UART_P->IFG & EUSCI_A_IFG_RXIFG)) {
-        // if RXBUF is empty and RX interrupt flag is cleared, start transmission of
-        // next word
-        UART_P->CTLW0 &= ~EUSCI_A_CTLW0_TXBRK;
-    }
 }
 
 // starts UART communication
