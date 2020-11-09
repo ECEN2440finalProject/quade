@@ -93,7 +93,8 @@
  *  By: Tyler Davidson
  *  Date: July 17th, 2020
  *
- *
+ *  Modified by: Terry Vis
+ *  Date: Nov 9, 2020
  *
  */
 
@@ -103,6 +104,7 @@
 #include "servo.h"
 #include "stIMU.h"
 #include "stdio.h"
+#include "assert.h"
 
 #include "uart.h"
 #include "RFlink.h"
@@ -211,7 +213,8 @@ void EUSCIA0_IRQHandler(void) {
         *uart_payload_struct.data = rx;
 
         if (rx_uart_struct.i == rx_uart_struct.length) {
-            rx_buf_write(&rx_uart_buf, rx_uart_struct);
+            int err = rx_buf_write(&rx_uart_buf, rx_uart_struct);
+            assert (!err);
             rx_uart_struct.i = 0; // reset iteration variable
         }
 
@@ -235,7 +238,7 @@ void PORT1_IRQHandler(void){
         state = 1;
 
     // Delay for switch debounce
-    for(j = 0; j < 100000; j++)
+    for(j = 0; j < 100000; j++);
 
     P1->IFG &= ~BIT1;
 }
