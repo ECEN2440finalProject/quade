@@ -2,6 +2,7 @@
  * uart.h
  *
  *  Created on: Oct 26, 2020
+ *    Modified: Nov 9, 2020
  *      Author: terry
  */
 
@@ -15,7 +16,7 @@
 
 void config_uart(void);
 void config_uart_interrupt(void);
-void EUSCIA0_IRQHandler(void);
+void EUSCIA2_IRQHandler(void);
 void start_uart(void);
 
 // defines
@@ -23,7 +24,7 @@ void start_uart(void);
 #define WRITE       false
 
 #define BAUD_RATE 1500
-#define UART_P EUSCI_A3
+#define UART_P EUSCI_A2
 
 // structs
 typedef struct {
