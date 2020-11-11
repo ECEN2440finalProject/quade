@@ -202,7 +202,7 @@ void main(void)
 }
 
 // putting this here for ease of struct/buffer handling
-void EUSCIA0_IRQHandler(void) {
+void EUSCIA3_IRQHandler(void) {
     // check each flag, then perform necessary function
     if (UART_P->IFG & EUSCI_A_IFG_RXIFG) {
 
