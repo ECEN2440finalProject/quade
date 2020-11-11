@@ -119,8 +119,6 @@ void rx_state(uint8_t rx_data, RX_UART_TypeDef * rx_uart) {
         default:
             // error state - set state back to idle
             rx_uart->state = IDLE;
-        break;
-
     }
 
 }
