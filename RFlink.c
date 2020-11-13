@@ -85,19 +85,19 @@ void rx_state(uint8_t rx_data, RX_UART_TypeDef * rx_uart) {
                     rx_uart->vertical += rx_data;       // Least significant 8 bits
                     break;
                 case 16:
-                    rx_uart->vertical += rx_data * 0x20; // Most significant 8 bits
+                    rx_uart->vertical += rx_data * 0x100;// Most significant 8 bits
                     break;
                 case 24:
                     rx_uart->horizontal += rx_data;
                     break;
                 case 32:
-                    rx_uart->horizontal += rx_data * 0x20;
+                    rx_uart->horizontal += rx_data * 0x100;
                     break;
                 case 40:
                     rx_uart->swval += rx_data;
                     break;
                 case 48:
-                    rx_uart->swval += rx_data;
+                    rx_uart->swval += rx_data * 0x100;
                     break;
                 }
             }
