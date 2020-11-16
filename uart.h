@@ -2,7 +2,7 @@
  * uart.h
  *
  *  Created on: Oct 26, 2020
- *    Modified: Nov 9, 2020
+ *    Modified: Nov 16, 2020
  *      Author: terry
  */
 
@@ -16,14 +16,32 @@
 
 void config_uart(void);
 void config_uart_interrupt(void);
-void EUSCIA2_IRQHandler(void);
+void EUSCIA0_IRQHandler(void);
 void start_uart(void);
 
 // defines
 #define READ        true
 #define WRITE       false
 
-#define BAUD_RATE 1500
+//--------------------------------------------
+//go to:
+//http://software-dl.ti.com/msp430/msp430_public_sw/mcu/msp430/MSP430BaudRateConverter/index.html
+//to find these numbers
+//currently at 3MHz clock with 1200bpsbaud rate
+
+#define CLOCK_PRESCALER 156
+//4 bits only!!
+#define FIRST_MOD 0x4
+//8 bits only!!
+#define SECOND_MOD 0x00
+
+//MCTLW REGISTER BITS:
+// [2ND MOD x 8            ] [1ST MOD x 4] [RES X 3 ][OVR SMPL x 1]
+// [15 14 13 12 11 10 09 08] [07 06 05 04] [03 02 01][00]
+#define MOD_BITS ((SECOND_MOD << 8) | (FIRST_MOD << 4))
+//--------------------------------------------
+
+
 #define UART_P EUSCI_A2
 
 // structs
