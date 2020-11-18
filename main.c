@@ -108,7 +108,8 @@
 
 #include "uart.h"
 #include "RFlink.h"
-
+#include "parse_joystick.h"
+#include "gait.h"
 
 
 volatile int state = 0;
@@ -119,15 +120,23 @@ volatile int state = 0;
  * 2 - Write data to servos
  */
 
+// For joystick:
+// Up/left is positive direction
+// (outputs high for these directions, low for down/right, 1/2 for neutral)
+
 static RX_UART_BUF_TypeDef rx_uart_buf;
 static UART_PAYLOAD_TypeDef uart_payload_struct;
-static RX_UART_TypeDef rx_uart_struct;
+static RX_UART_TypeDef rx_uart_struct, *rx_read_struct;
 
 void main(void)
  {
 	WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;		// stop watchdog timer
+	config_uart();
+	config_uart_interrupt();
+	config_rx_gpio();
+	start_uart();
 
-	//set up Button Interrupt
+	// set up Button Interrupt
     P1->DIR &= ~BIT1;
     P1->OUT |= BIT1;
     P1->REN |= BIT1;
@@ -159,7 +168,7 @@ void main(void)
     //EUSCI_B0 uses P1.7 as SCL and P1.6 as SDA
     i2c_open(EUSCI_B0, &i2c_open_struct);
 
-    //pca9685_init(); //sets up PCA to output at the correct frequency
+    pca9685_init(); //sets up PCA to output at the correct frequency
     config_LIS3MDL();
 
     int16_t mx, my, mz;
@@ -170,7 +179,7 @@ void main(void)
     //Neutral Position
     while(state == 0){
         for(i=0; i<200000; i++);
-        //i2c_start(EUSCI_B0, LIS3MDL_MAG_I2C_ADDRESS, READ, &data, 1, LIS3MDL_MAG_STATUS_REG);
+        i2c_start(EUSCI_B0, LIS3MDL_MAG_I2C_ADDRESS, READ, &data, 1, LIS3MDL_MAG_STATUS_REG);
         i2c_start(EUSCI_B0, LIS3MDL_MAG_I2C_ADDRESS, READ, &data, 1, LIS3MDL_MAG_STATUS_REG);
         printf("status 1: %d\n",data);
         for(i=0; i<1000; i++);
@@ -180,23 +189,33 @@ void main(void)
         printf("x: %d\n", mx);
         printf("y: %d\n", my);
         printf("z: %d\n", mz);
-        //printf("status: %d\n", data);
+        printf("status: %d\n", data);
         printf("\n");
         printf("\n");
-        //printf("\n");
-        //printf("\n");
+        printf("\n");
+        printf("\n");
     }
 
-    //Standing Position -- any state except 0
-    while(state){
-        /*servo_write(URL,90-45); //Because the Orientations are opposite of the other servos,
-        servo_write(LRL,90-45); //the direction the servo must move to stand up is also opposote
-        servo_write(URA,90+45);
-        servo_write(LRA,90+45);
-        servo_write(ULL,90+45);
-        servo_write(LLL,90+45);
-        servo_write(ULA,90-45); //See Above Comment
-        servo_write(LLA,90-45);*/
+    int8_t * pos; // pointer to array for position of joystick
+    uint8_t err;
+
+    // Infinite loop for Quade motion -- interrupt for other functions
+    while (state) {
+        if (state==1) {
+            err = rx_buf_read(&rx_uart_buf, rx_read_struct);
+            joystick_pos(rx_read_struct, pos);
+            // check for successful read (make sure buffer is not empty for this cycle)
+            // if successful, break out of loop, write to servos next
+            state = err ? 1 : 2;
+        }
+
+        else if (state==2) {
+            // write to servos
+            servo_gait(pos);
+            state = 1;
+        }
+
+        else state = 1; // if state does not equal 1 or 2, set to 1 (read state)
     }
 
 }
@@ -205,27 +224,21 @@ void main(void)
 void EUSCIA2_IRQHandler(void) {
     // check each flag, then perform necessary function
     if (UART_P->IFG & EUSCI_A_IFG_RXIFG) {
-
-        UART_P->CTLW0 |= EUSCI_A_CTLW0_TXBRK;
+        UART_P->IFG &= ~EUSCI_A_IFG_RXIFG; // clear flag
 
         // store RXBUF bits, will empty buffer
         uint8_t rx = UART_P->RXBUF & EUSCI_A_RXBUF_RXBUF_MASK;
         *uart_payload_struct.data = rx;
 
         if (rx_uart_struct.i == rx_uart_struct.length) {
-            int err = rx_buf_write(&rx_uart_buf, rx_uart_struct);
-            assert (!err);
+            rx_buf_write(&rx_uart_buf, rx_uart_struct);
             rx_uart_struct.i = 0; // reset iteration variable
         }
 
         rx_state(rx, &rx_uart_struct);
 
-        UART_P->IFG &= ~EUSCI_A_IFG_RXIFG; // clear flag
 
-    } else if (!(UART_P->RXBUF) && !(UART_P->IFG & EUSCI_A_IFG_RXIFG)) {
-        // if RXBUF is empty and RX interrupt flag is cleared, start transmission of
-        // next word
-        UART_P->CTLW0 &= ~EUSCI_A_CTLW0_TXBRK;
+
     }
 }
 
@@ -239,6 +252,17 @@ void PORT1_IRQHandler(void){
 
     // Delay for switch debounce
     for(j = 0; j < 100000; j++);
+
+    // Initialize standing position
+    servo_write(URL,90-45); //Because the Orientations are opposite of the other servos,
+    servo_write(LRL,90-45); //the direction the servo must move to stand up is also opposote
+    servo_write(URA,90+45);
+    servo_write(LRA,90+45);
+    servo_write(ULL,90+45);
+    servo_write(LLL,90+45);
+    servo_write(ULA,90-45); //See Above Comment
+    servo_write(LLA,90-45);
+    wait_all_reach();
 
     P1->IFG &= ~BIT1;
 }
