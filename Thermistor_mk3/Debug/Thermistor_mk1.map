@@ -1,0 +1,559 @@
+******************************************************************************
+                  TI ARM Linker PC v20.2.1                     
+******************************************************************************
+>> Linked Mon Nov 23 12:35:31 2020
+
+OUTPUT FILE NAME:   <Thermistor_mk1.out>
+ENTRY POINT SYMBOL: "_c_int00_noargs"  address: 00001d01
+
+
+MEMORY CONFIGURATION
+
+         name            origin    length      used     unused   attr    fill
+----------------------  --------  ---------  --------  --------  ----  --------
+  MAIN                  00000000   00040000  00001f10  0003e0f0  R  X
+  INFO                  00200000   00004000  00000000  00004000  R  X
+  SRAM_CODE             01000000   00010000  000002ee  0000fd12  RW X
+  SRAM_DATA             20000000   00010000  000002ee  0000fd12  RW  
+
+
+SEGMENT ALLOCATION MAP
+
+run origin  load origin   length   init length attrs members
+----------  ----------- ---------- ----------- ----- -------
+00000000    00000000    00001f10   00001f10    r-x
+  00000000    00000000    000000e4   000000e4    r-- .intvecs
+  000000e4    000000e4    00001c90   00001c90    r-x .text
+  00001d74    00001d74    0000015c   0000015c    r-- .const
+  00001ed0    00001ed0    00000040   00000040    r-- .cinit
+20000000    20000000    000000ee   00000000    rw-
+  20000000    20000000    000000e8   00000000    rw- .vtable
+  200000e8    200000e8    00000004   00000000    rw- .data
+  200000ec    200000ec    00000002   00000000    rw- .bss
+2000fe00    2000fe00    00000200   00000000    rw-
+  2000fe00    2000fe00    00000200   00000000    rw- .stack
+
+
+SECTION ALLOCATION MAP
+
+ output                                  attributes/
+section   page    origin      length       input sections
+--------  ----  ----------  ----------   ----------------
+.intvecs   0    00000000    000000e4     
+                  00000000    000000e4     startup_msp432p401r_ccs.obj (.intvecs:retain)
+
+.text      0    000000e4    00001c90     
+                  000000e4    00000908     adc14.obj (.text)
+                  000009ec    00000480     gpio.obj (.text)
+                  00000e6c    0000040c     interrupt.obj (.text)
+                  00001278    00000334     system_msp432p401r.obj (.text)
+                  000015ac    000002ac     main.obj (.text)
+                  00001858    00000248     sysctl.obj (.text)
+                  00001aa0    000000d8     wdt_a.obj (.text)
+                  00001b78    0000009c     rtsv7M4_T_le_v4SPD16_eabi.lib : memcpy_t2.asm.obj (.text)
+                  00001c14    00000068                                   : copy_decompress_lzss.c.obj (.text:decompress:lzss:__TI_decompress_lzss)
+                  00001c7c    00000044                                   : autoinit.c.obj (.text:__TI_auto_init_nobinit_nopinit:__TI_auto_init_nobinit_nopinit)
+                  00001cc0    0000003e     cpu.obj (.text)
+                  00001cfe    00000002     --HOLE-- [fill = 0]
+                  00001d00    00000034     rtsv7M4_T_le_v4SPD16_eabi.lib : boot_cortex_m.c.obj (.text:_c_int00_noargs:_c_int00_noargs)
+                  00001d34    0000001c                                   : copy_zero_init.c.obj (.text:decompress:ZI:__TI_zero_init_nomemset:__TI_zero_init_nomemset)
+                  00001d50    0000000e                                   : copy_decompress_none.c.obj (.text:decompress:none:__TI_decompress_none)
+                  00001d5e    0000000e     startup_msp432p401r_ccs.obj (.text)
+                  00001d6c    00000004     rtsv7M4_T_le_v4SPD16_eabi.lib : pre_init.c.obj (.text:_system_pre_init)
+                  00001d70    00000004                                   : exit.c.obj (.text:abort:abort)
+
+.const     0    00001d74    0000015c     
+                  00001d74    00000080     adc14.obj (.const:_ctlRegs)
+                  00001df4    00000050     interrupt.obj (.const:g_pulRegs)
+                  00001e44    00000030     gpio.obj (.const:GPIO_PORT_TO_BASE)
+                  00001e74    00000020     interrupt.obj (.const:g_pulPriority)
+                  00001e94    0000001c     gpio.obj (.const:GPIO_PORT_TO_INT)
+                  00001eb0    00000008     interrupt.obj (.const:g_pulDisRegs)
+                  00001eb8    00000008     interrupt.obj (.const:g_pulEnRegs)
+                  00001ec0    00000008     interrupt.obj (.const:g_pulPendRegs)
+                  00001ec8    00000008     interrupt.obj (.const:g_pulUnpendRegs)
+
+.cinit     0    00001ed0    00000040     
+                  00001ed0    0000000c     (__TI_handler_table)
+                  00001edc    00000004     --HOLE-- [fill = 0]
+                  00001ee0    00000008     (.cinit..bss.load) [load image, compression = zero_init]
+                  00001ee8    00000008     (.cinit..data.load) [load image, compression = lzss]
+                  00001ef0    00000008     (.cinit..vtable.load) [load image, compression = zero_init]
+                  00001ef8    00000018     (__TI_cinit_table)
+
+.init_array 
+*          0    00000000    00000000     UNINITIALIZED
+
+.binit     0    00000000    00000000     
+
+.vtable    0    20000000    000000e8     UNINITIALIZED
+                  20000000    000000e8     interrupt.obj (.vtable)
+
+.data      0    200000e8    00000004     UNINITIALIZED
+                  200000e8    00000004     system_msp432p401r.obj (.data)
+
+.bss       0    200000ec    00000002     UNINITIALIZED
+                  200000ec    00000002     (.common:adcResult)
+
+.stack     0    2000fe00    00000200     UNINITIALIZED
+                  2000fe00    00000004     rtsv7M4_T_le_v4SPD16_eabi.lib : boot_cortex_m.c.obj (.stack)
+                  2000fe04    000001fc     --HOLE--
+
+__llvm_prf_cnts 
+*          0    20000000    00000000     UNINITIALIZED
+
+MODULE SUMMARY
+
+       Module                        code   ro data   rw data
+       ------                        ----   -------   -------
+    .\
+       adc14.obj                     2312   128       0      
+       interrupt.obj                 1036   144       464    
+       gpio.obj                      1152   76        0      
+       system_msp432p401r.obj        820    0         8      
+       main.obj                      684    0         4      
+       sysctl.obj                    584    0         0      
+       startup_msp432p401r_ccs.obj   14     228       0      
+       wdt_a.obj                     216    0         0      
+       cpu.obj                       62     0         0      
+    +--+-----------------------------+------+---------+---------+
+       Total:                        6880   576       476    
+                                                             
+    C:\ti\ccs1011\ccs\tools\compiler\ti-cgt-arm_20.2.1.LTS\lib\rtsv7M4_T_le_v4SPD16_eabi.lib
+       memcpy_t2.asm.obj             156    0         0      
+       copy_decompress_lzss.c.obj    104    0         0      
+       autoinit.c.obj                68     0         0      
+       boot_cortex_m.c.obj           52     0         0      
+       copy_zero_init.c.obj          28     0         0      
+       copy_decompress_none.c.obj    14     0         0      
+       exit.c.obj                    4      0         0      
+       pre_init.c.obj                4      0         0      
+    +--+-----------------------------+------+---------+---------+
+       Total:                        430    0         0      
+                                                             
+       Stack:                        0      0         1024   
+       Linker Generated:             0      60        0      
+    +--+-----------------------------+------+---------+---------+
+       Grand Total:                  7310   636       1500   
+
+
+LINKER GENERATED COPY TABLES
+
+__TI_cinit_table @ 00001ef8 records: 3, size/record: 8, table size: 24
+	.bss: load addr=00001ee0, load size=00000008 bytes, run addr=200000ec, run size=00000002 bytes, compression=zero_init
+	.data: load addr=00001ee8, load size=00000008 bytes, run addr=200000e8, run size=00000004 bytes, compression=lzss
+	.vtable: load addr=00001ef0, load size=00000008 bytes, run addr=20000000, run size=000000e8 bytes, compression=zero_init
+
+
+LINKER GENERATED HANDLER TABLE
+
+__TI_handler_table @ 00001ed0 records: 3, size/record: 4, table size: 12
+	index: 0, handler: __TI_zero_init
+	index: 1, handler: __TI_decompress_lzss
+	index: 2, handler: __TI_decompress_none
+
+
+GLOBAL SYMBOLS: SORTED ALPHABETICALLY BY Name 
+
+address   name                                       
+-------   ----                                       
+00001659  ADC14_IRQHandler                           
+00001659  ADC14_IRQHandler                           
+00000965  ADC14_clearInterruptFlag                   
+000004ed  ADC14_configureConversionMemory            
+00000381  ADC14_configureMultiSequenceMode           
+00000429  ADC14_configureSingleSampleMode            
+0000063d  ADC14_disableComparatorWindow              
+000004bb  ADC14_disableConversion                    
+000008df  ADC14_disableInterrupt                     
+00000255  ADC14_disableModule                        
+0000085f  ADC14_disableReferenceBurst                
+00000295  ADC14_disableSampleTimer                   
+0000059d  ADC14_enableComparatorWindow               
+00000479  ADC14_enableConversion                     
+000008b7  ADC14_enableInterrupt                      
+0000024d  ADC14_enableModule                         
+00000849  ADC14_enableReferenceBurst                 
+0000026b  ADC14_enableSampleTimer                    
+00000931  ADC14_getEnabledInterruptStatus            
+00000907  ADC14_getInterruptStatus                   
+00000773  ADC14_getMultiSequenceResult               
+0000030b  ADC14_getResolution                        
+0000074f  ADC14_getResult                            
+000007c1  ADC14_getResultArray                       
+000002ab  ADC14_initModule                           
+000004c7  ADC14_isBusy                               
+0000098d  ADC14_registerInterrupt                    
+0000069b  ADC14_setComparatorWindowValue             
+00000875  ADC14_setPowerMode                         
+000002f1  ADC14_setResolution                        
+00000725  ADC14_setResultFormat                      
+00000357  ADC14_setSampleHoldTime                    
+00000315  ADC14_setSampleHoldTrigger                 
+00000499  ADC14_toggleConversionTrigger              
+000009a1  ADC14_unregisterInterrupt                  
+00001d6b  AES256_IRQHandler                          
+00001d6b  BusFault_Handler                           
+00001d71  C$$EXIT                                    
+00001d6b  COMP_E0_IRQHandler                         
+00001d6b  COMP_E1_IRQHandler                         
+00001cf5  CPU_basepriGet                             
+00001ce7  CPU_basepriSet                             
+00001cc1  CPU_cpsid                                  
+00001cd7  CPU_cpsie                                  
+00001ccd  CPU_primask                                
+00001ce3  CPU_wfi                                    
+00001d6b  CS_IRQHandler                              
+00001d6b  DMA_ERR_IRQHandler                         
+00001d6b  DMA_INT0_IRQHandler                        
+00001d6b  DMA_INT1_IRQHandler                        
+00001d6b  DMA_INT2_IRQHandler                        
+00001d6b  DMA_INT3_IRQHandler                        
+00001d6b  DebugMon_Handler                           
+00001d6b  Default_Handler                            
+00001d6b  EUSCIA0_IRQHandler                         
+00001d6b  EUSCIA1_IRQHandler                         
+00001d6b  EUSCIA2_IRQHandler                         
+00001d6b  EUSCIA3_IRQHandler                         
+00001d6b  EUSCIB0_IRQHandler                         
+00001d6b  EUSCIB1_IRQHandler                         
+00001d6b  EUSCIB2_IRQHandler                         
+00001d6b  EUSCIB3_IRQHandler                         
+00001d6b  FLCTL_IRQHandler                           
+00001d6b  FPU_IRQHandler                             
+00000d0f  GPIO_clearInterruptFlag                    
+00000ccf  GPIO_disableInterrupt                      
+00000cad  GPIO_enableInterrupt                       
+00000d67  GPIO_getEnabledInterruptStatus             
+00000c7f  GPIO_getInputPinValue                      
+00000cf1  GPIO_getInterruptStatus                    
+00000d31  GPIO_interruptEdgeSelect                   
+00000e27  GPIO_registerInterrupt                     
+00000a27  GPIO_setAsInputPin                         
+00000bdb  GPIO_setAsInputPinWithPullDownResistor     
+00000c2d  GPIO_setAsInputPinWithPullUpResistor       
+000009ed  GPIO_setAsOutputPin                        
+00000af1  GPIO_setAsPeripheralModuleFunctionInputPin 
+00000a6d  GPIO_setAsPeripheralModuleFunctionOutputPin
+00000de3  GPIO_setDriveStrengthHigh                  
+00000e05  GPIO_setDriveStrengthLow                   
+00000b75  GPIO_setOutputHighOnPin                    
+00000b97  GPIO_setOutputLowOnPin                     
+00000bb9  GPIO_toggleOutputOnPin                     
+00000e47  GPIO_unregisterInterrupt                   
+00001d6b  HardFault_Handler                          
+0000104d  Interrupt_disableInterrupt                 
+00000e7f  Interrupt_disableMaster                    
+00001249  Interrupt_disableSleepOnIsrExit            
+00000fdb  Interrupt_enableInterrupt                  
+00000e6f  Interrupt_enableMaster                     
+00001237  Interrupt_enableSleepOnIsrExit             
+00000fb5  Interrupt_getPriority                      
+00000f2d  Interrupt_getPriorityGrouping              
+00001217  Interrupt_getPriorityMask                  
+00001231  Interrupt_getVectorTableAddress            
+000010bf  Interrupt_isEnabled                        
+00001149  Interrupt_pendInterrupt                    
+00000e8f  Interrupt_registerInterrupt                
+00000f65  Interrupt_setPriority                      
+00000ef5  Interrupt_setPriorityGrouping              
+00001207  Interrupt_setPriorityMask                  
+00001221  Interrupt_setVectorTableAddress            
+000011b9  Interrupt_unpendInterrupt                  
+00000ee1  Interrupt_unregisterInterrupt              
+00001d6b  MemManage_Handler                          
+00001d6b  NMI_Handler                                
+00001d6b  PCM_IRQHandler                             
+00001d6b  PORT1_IRQHandler                           
+00001d6b  PORT2_IRQHandler                           
+00001d6b  PORT3_IRQHandler                           
+00001d6b  PORT4_IRQHandler                           
+00001d6b  PORT5_IRQHandler                           
+00001d6b  PORT6_IRQHandler                           
+00001d6b  PSS_IRQHandler                             
+00001d6b  PendSV_Handler                             
+00001d6b  RTC_C_IRQHandler                           
+00001d5f  Reset_Handler                              
+00001d6b  SVC_Handler                                
+00001a4f  SysCtl_disableGlitchFilter                 
+000018db  SysCtl_disableNMISource                    
+000019e7  SysCtl_disablePeripheralAtCPUHalt          
+00001929  SysCtl_disableSRAMBank                     
+000019ad  SysCtl_disableSRAMBankRetention            
+00001a43  SysCtl_enableGlitchFilter                  
+000018ef  SysCtl_enableNMISource                     
+000019d3  SysCtl_enablePeripheralAtCPUHalt           
+0000190d  SysCtl_enableSRAMBank                      
+00001991  SysCtl_enableSRAMBankRetention             
+000018d5  SysCtl_getFlashSize                        
+00001903  SysCtl_getNMISourceStatus                  
+000018cf  SysCtl_getSRAMSize                         
+00001859  SysCtl_getTLVInfo                          
+00001a5b  SysCtl_getTempCalibrationConstant          
+000019c9  SysCtl_rebootDevice                        
+00001a1f  SysCtl_setWDTPasswordViolationResetType    
+000019fb  SysCtl_setWDTTimeoutResetType              
+00001d6b  SysTick_Handler                            
+200000e8  SystemCoreClock                            
+00001279  SystemCoreClockUpdate                      
+000014f1  SystemInit                                 
+00001d6b  T32_INT1_IRQHandler                        
+00001d6b  T32_INT2_IRQHandler                        
+00001d6b  T32_INTC_IRQHandler                        
+00001d6b  TA0_0_IRQHandler                           
+00001d6b  TA0_N_IRQHandler                           
+00001d6b  TA1_0_IRQHandler                           
+00001d6b  TA1_N_IRQHandler                           
+00001d6b  TA2_0_IRQHandler                           
+00001d6b  TA2_N_IRQHandler                           
+00001d6b  TA3_0_IRQHandler                           
+00001d6b  TA3_N_IRQHandler                           
+00001d6b  UsageFault_Handler                         
+4000480c  WDTCTL_SYM                                 
+00001d6b  WDT_A_IRQHandler                           
+00001ae1  WDT_A_clearTimer                           
+00001aa1  WDT_A_holdTimer                            
+00001b1d  WDT_A_initIntervalTimer                    
+00001b01  WDT_A_initWatchdogTimer                    
+00001b51  WDT_A_registerInterrupt                    
+00001b39  WDT_A_setPasswordViolationReset            
+00001b45  WDT_A_setTimeoutReset                      
+00001ac1  WDT_A_startTimer                           
+00001b65  WDT_A_unregisterInterrupt                  
+20010000  __STACK_END                                
+00000200  __STACK_SIZE                               
+00001ef8  __TI_CINIT_Base                            
+00001f10  __TI_CINIT_Limit                           
+00001ed0  __TI_Handler_Table_Base                    
+00001edc  __TI_Handler_Table_Limit                   
+00001c7d  __TI_auto_init_nobinit_nopinit             
+00001c15  __TI_decompress_lzss                       
+00001d51  __TI_decompress_none                       
+ffffffff  __TI_pprof_out_hndl                        
+ffffffff  __TI_prof_data_size                        
+ffffffff  __TI_prof_data_start                       
+00000000  __TI_static_base__                         
+00001d35  __TI_zero_init_nomemset                    
+00001b79  __aeabi_memcpy                             
+00001b79  __aeabi_memcpy4                            
+00001b79  __aeabi_memcpy8                            
+ffffffff  __binit__                                  
+ffffffff  __c_args__                                 
+UNDEFED   __mpu_init                                 
+2000fe00  __stack                                    
+20000000  __start___llvm_prf_cnts                    
+20000000  __stop___llvm_prf_cnts                     
+00001d01  _c_int00_noargs                            
+UNDEFED   _system_post_cinit                         
+00001d6d  _system_pre_init                           
+00001d71  abort                                      
+200000ec  adcResult                                  
+ffffffff  binit                                      
+20000000  g_pfnRAMVectors                            
+00000000  interruptVectors                           
+000015ad  main                                       
+00001b79  memcpy                                     
+
+
+GLOBAL SYMBOLS: SORTED BY Symbol Address 
+
+address   name                                       
+-------   ----                                       
+00000000  __TI_static_base__                         
+00000000  interruptVectors                           
+00000200  __STACK_SIZE                               
+0000024d  ADC14_enableModule                         
+00000255  ADC14_disableModule                        
+0000026b  ADC14_enableSampleTimer                    
+00000295  ADC14_disableSampleTimer                   
+000002ab  ADC14_initModule                           
+000002f1  ADC14_setResolution                        
+0000030b  ADC14_getResolution                        
+00000315  ADC14_setSampleHoldTrigger                 
+00000357  ADC14_setSampleHoldTime                    
+00000381  ADC14_configureMultiSequenceMode           
+00000429  ADC14_configureSingleSampleMode            
+00000479  ADC14_enableConversion                     
+00000499  ADC14_toggleConversionTrigger              
+000004bb  ADC14_disableConversion                    
+000004c7  ADC14_isBusy                               
+000004ed  ADC14_configureConversionMemory            
+0000059d  ADC14_enableComparatorWindow               
+0000063d  ADC14_disableComparatorWindow              
+0000069b  ADC14_setComparatorWindowValue             
+00000725  ADC14_setResultFormat                      
+0000074f  ADC14_getResult                            
+00000773  ADC14_getMultiSequenceResult               
+000007c1  ADC14_getResultArray                       
+00000849  ADC14_enableReferenceBurst                 
+0000085f  ADC14_disableReferenceBurst                
+00000875  ADC14_setPowerMode                         
+000008b7  ADC14_enableInterrupt                      
+000008df  ADC14_disableInterrupt                     
+00000907  ADC14_getInterruptStatus                   
+00000931  ADC14_getEnabledInterruptStatus            
+00000965  ADC14_clearInterruptFlag                   
+0000098d  ADC14_registerInterrupt                    
+000009a1  ADC14_unregisterInterrupt                  
+000009ed  GPIO_setAsOutputPin                        
+00000a27  GPIO_setAsInputPin                         
+00000a6d  GPIO_setAsPeripheralModuleFunctionOutputPin
+00000af1  GPIO_setAsPeripheralModuleFunctionInputPin 
+00000b75  GPIO_setOutputHighOnPin                    
+00000b97  GPIO_setOutputLowOnPin                     
+00000bb9  GPIO_toggleOutputOnPin                     
+00000bdb  GPIO_setAsInputPinWithPullDownResistor     
+00000c2d  GPIO_setAsInputPinWithPullUpResistor       
+00000c7f  GPIO_getInputPinValue                      
+00000cad  GPIO_enableInterrupt                       
+00000ccf  GPIO_disableInterrupt                      
+00000cf1  GPIO_getInterruptStatus                    
+00000d0f  GPIO_clearInterruptFlag                    
+00000d31  GPIO_interruptEdgeSelect                   
+00000d67  GPIO_getEnabledInterruptStatus             
+00000de3  GPIO_setDriveStrengthHigh                  
+00000e05  GPIO_setDriveStrengthLow                   
+00000e27  GPIO_registerInterrupt                     
+00000e47  GPIO_unregisterInterrupt                   
+00000e6f  Interrupt_enableMaster                     
+00000e7f  Interrupt_disableMaster                    
+00000e8f  Interrupt_registerInterrupt                
+00000ee1  Interrupt_unregisterInterrupt              
+00000ef5  Interrupt_setPriorityGrouping              
+00000f2d  Interrupt_getPriorityGrouping              
+00000f65  Interrupt_setPriority                      
+00000fb5  Interrupt_getPriority                      
+00000fdb  Interrupt_enableInterrupt                  
+0000104d  Interrupt_disableInterrupt                 
+000010bf  Interrupt_isEnabled                        
+00001149  Interrupt_pendInterrupt                    
+000011b9  Interrupt_unpendInterrupt                  
+00001207  Interrupt_setPriorityMask                  
+00001217  Interrupt_getPriorityMask                  
+00001221  Interrupt_setVectorTableAddress            
+00001231  Interrupt_getVectorTableAddress            
+00001237  Interrupt_enableSleepOnIsrExit             
+00001249  Interrupt_disableSleepOnIsrExit            
+00001279  SystemCoreClockUpdate                      
+000014f1  SystemInit                                 
+000015ad  main                                       
+00001659  ADC14_IRQHandler                           
+00001659  ADC14_IRQHandler                           
+00001859  SysCtl_getTLVInfo                          
+000018cf  SysCtl_getSRAMSize                         
+000018d5  SysCtl_getFlashSize                        
+000018db  SysCtl_disableNMISource                    
+000018ef  SysCtl_enableNMISource                     
+00001903  SysCtl_getNMISourceStatus                  
+0000190d  SysCtl_enableSRAMBank                      
+00001929  SysCtl_disableSRAMBank                     
+00001991  SysCtl_enableSRAMBankRetention             
+000019ad  SysCtl_disableSRAMBankRetention            
+000019c9  SysCtl_rebootDevice                        
+000019d3  SysCtl_enablePeripheralAtCPUHalt           
+000019e7  SysCtl_disablePeripheralAtCPUHalt          
+000019fb  SysCtl_setWDTTimeoutResetType              
+00001a1f  SysCtl_setWDTPasswordViolationResetType    
+00001a43  SysCtl_enableGlitchFilter                  
+00001a4f  SysCtl_disableGlitchFilter                 
+00001a5b  SysCtl_getTempCalibrationConstant          
+00001aa1  WDT_A_holdTimer                            
+00001ac1  WDT_A_startTimer                           
+00001ae1  WDT_A_clearTimer                           
+00001b01  WDT_A_initWatchdogTimer                    
+00001b1d  WDT_A_initIntervalTimer                    
+00001b39  WDT_A_setPasswordViolationReset            
+00001b45  WDT_A_setTimeoutReset                      
+00001b51  WDT_A_registerInterrupt                    
+00001b65  WDT_A_unregisterInterrupt                  
+00001b79  __aeabi_memcpy                             
+00001b79  __aeabi_memcpy4                            
+00001b79  __aeabi_memcpy8                            
+00001b79  memcpy                                     
+00001c15  __TI_decompress_lzss                       
+00001c7d  __TI_auto_init_nobinit_nopinit             
+00001cc1  CPU_cpsid                                  
+00001ccd  CPU_primask                                
+00001cd7  CPU_cpsie                                  
+00001ce3  CPU_wfi                                    
+00001ce7  CPU_basepriSet                             
+00001cf5  CPU_basepriGet                             
+00001d01  _c_int00_noargs                            
+00001d35  __TI_zero_init_nomemset                    
+00001d51  __TI_decompress_none                       
+00001d5f  Reset_Handler                              
+00001d6b  AES256_IRQHandler                          
+00001d6b  BusFault_Handler                           
+00001d6b  COMP_E0_IRQHandler                         
+00001d6b  COMP_E1_IRQHandler                         
+00001d6b  CS_IRQHandler                              
+00001d6b  DMA_ERR_IRQHandler                         
+00001d6b  DMA_INT0_IRQHandler                        
+00001d6b  DMA_INT1_IRQHandler                        
+00001d6b  DMA_INT2_IRQHandler                        
+00001d6b  DMA_INT3_IRQHandler                        
+00001d6b  DebugMon_Handler                           
+00001d6b  Default_Handler                            
+00001d6b  EUSCIA0_IRQHandler                         
+00001d6b  EUSCIA1_IRQHandler                         
+00001d6b  EUSCIA2_IRQHandler                         
+00001d6b  EUSCIA3_IRQHandler                         
+00001d6b  EUSCIB0_IRQHandler                         
+00001d6b  EUSCIB1_IRQHandler                         
+00001d6b  EUSCIB2_IRQHandler                         
+00001d6b  EUSCIB3_IRQHandler                         
+00001d6b  FLCTL_IRQHandler                           
+00001d6b  FPU_IRQHandler                             
+00001d6b  HardFault_Handler                          
+00001d6b  MemManage_Handler                          
+00001d6b  NMI_Handler                                
+00001d6b  PCM_IRQHandler                             
+00001d6b  PORT1_IRQHandler                           
+00001d6b  PORT2_IRQHandler                           
+00001d6b  PORT3_IRQHandler                           
+00001d6b  PORT4_IRQHandler                           
+00001d6b  PORT5_IRQHandler                           
+00001d6b  PORT6_IRQHandler                           
+00001d6b  PSS_IRQHandler                             
+00001d6b  PendSV_Handler                             
+00001d6b  RTC_C_IRQHandler                           
+00001d6b  SVC_Handler                                
+00001d6b  SysTick_Handler                            
+00001d6b  T32_INT1_IRQHandler                        
+00001d6b  T32_INT2_IRQHandler                        
+00001d6b  T32_INTC_IRQHandler                        
+00001d6b  TA0_0_IRQHandler                           
+00001d6b  TA0_N_IRQHandler                           
+00001d6b  TA1_0_IRQHandler                           
+00001d6b  TA1_N_IRQHandler                           
+00001d6b  TA2_0_IRQHandler                           
+00001d6b  TA2_N_IRQHandler                           
+00001d6b  TA3_0_IRQHandler                           
+00001d6b  TA3_N_IRQHandler                           
+00001d6b  UsageFault_Handler                         
+00001d6b  WDT_A_IRQHandler                           
+00001d6d  _system_pre_init                           
+00001d71  C$$EXIT                                    
+00001d71  abort                                      
+00001ed0  __TI_Handler_Table_Base                    
+00001edc  __TI_Handler_Table_Limit                   
+00001ef8  __TI_CINIT_Base                            
+00001f10  __TI_CINIT_Limit                           
+20000000  __start___llvm_prf_cnts                    
+20000000  __stop___llvm_prf_cnts                     
+20000000  g_pfnRAMVectors                            
+200000e8  SystemCoreClock                            
+200000ec  adcResult                                  
+2000fe00  __stack                                    
+20010000  __STACK_END                                
+4000480c  WDTCTL_SYM                                 
+ffffffff  __TI_pprof_out_hndl                        
+ffffffff  __TI_prof_data_size                        
+ffffffff  __TI_prof_data_start                       
+ffffffff  __binit__                                  
+ffffffff  __c_args__                                 
+ffffffff  binit                                      
+UNDEFED   __mpu_init                                 
+UNDEFED   _system_post_cinit                         
+
+[196 symbols]
