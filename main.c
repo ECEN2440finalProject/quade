@@ -110,6 +110,7 @@
 #include "RFlink.h"
 #include "parse_joystick.h"
 #include "gait.h"
+#include "thermistor.h"
 
 
 volatile int state = 0;
@@ -135,6 +136,12 @@ void main(void)
 	config_uart_interrupt();
 	config_rx_gpio();
 	start_uart();
+
+	// Configure and start ADC
+	adc_config();
+	adc_pin_config();
+	adc_enable_interrupt();
+	start_adc();
 
 	// set up Button Interrupt
     P1->DIR &= ~BIT1;
@@ -266,13 +273,5 @@ void PORT1_IRQHandler(void){
 
     P1->IFG &= ~BIT1;
 }
- /*servo_write(URL,90); //90 Degrees represents the Neutral Position
-        servo_write(LRL,90);
-        servo_write(URA,90);
-        servo_write(LRA,90);
-        servo_write(ULL,90);
-        servo_write(LLL,90);
-        servo_write(ULA,90);
-        servo_write(LLA,90);
 
-        */
+
