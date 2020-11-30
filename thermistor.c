@@ -6,6 +6,10 @@
  * Modified by: Terry Vis
  */
 
+/*
+* This ADC is borrowed from the MSP432 driver lib example: "adc14_single_channel_external_reference"
+*/
+
 #include "thermistor.h"
 
 volatile uint16_t adcResult;
@@ -72,6 +76,9 @@ void ADC14_IRQHandler(void)
         P2->OUT &= ~BIT2;
     }
 
+    //(below) This portion of the IRQHandler is based off of Joshua Macfie's post on TI's website regarding an ADC example. 
+    //When activated, the code compares the hex value of the ADC to determine what color LED turns on corresponding to the temperature
+    
     if (adcResult >= 0x29C1)                            // >40degrees: Red
         P2->OUT |= BIT0;
     else if (adcResult >= 0x26B5 && adcResult < 0x29C1) //35C-40C: Red
@@ -90,8 +97,8 @@ void ADC14_IRQHandler(void)
         P2->OUT |= BIT2;
     else if (adcResult >= 0x156E && adcResult < 0x18E6) //0C-5C: Blue
         P2->OUT |= BIT2;
-    else if (adcResult <= 0x18E6) //0C<: White
+    else if (adcResult <= 0x18E6)                       //0C<: White
         P2->OUT |= BIT0 | BIT1 | BIT2;
     else
-        P1->OUT &= ~BIT0;                     // P1.0 = 0
+        P1->OUT &= ~BIT0;                               // P1.0 = 0, nothing happens
 }
