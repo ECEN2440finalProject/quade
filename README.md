@@ -9,7 +9,7 @@ Fall, 2020
 
 All code files (original and leveraged) can be found here, along with:
   - Texas Instruments MSP432P401R LaunchPad datasheet, header file, and Technical Reference Manual (quade/Datasheet_TechRefMan/)
-  - EAGLE PCB schematic and board design files for Arduino Uno shield, for remote control (quade/Arduino_Uno_Shield)
+  - EAGLE PCB schematic and board design files for Arduino Uno shield, for remote control (quade/Arduino_Uno_Shield/)
 
 Works Cited/Leveraged Code:
   - Tyler Davidson: IMU_TestBench code (stIMU.c/.h, pca9685.c/.h, i2c.c/.h, parts of main.c); FirstSteps code (servo.c/.h, parts of gait.c/.h)
