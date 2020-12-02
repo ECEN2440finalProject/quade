@@ -2,7 +2,9 @@
 ECEN 2440 quade code
 
 GitHub repository for RC Quade (Quadruped robot with MSP432 as its base, controlled wirelessly by a remote control with joystick).
+
 ECEN 2440 Final Project Team 11 - Michael L, Terry V, Wyatt S, Ethan C
+
 Fall, 2020
 
 All code files (original and leveraged) can be found here, along with:
